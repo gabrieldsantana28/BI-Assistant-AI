@@ -1,12 +1,11 @@
 # Importando bibliotecas
 from fastapi import FastAPI
+from backend.app.routers.health import router as health_router
 
 # Cria a aplicação
-app = FastAPI()
+app = FastAPI(
+    title='BI Assistant AI',
+    version='1.0.0'
+)
 
-
-@app.get('/')
-def home():
-    return {
-        'message': 'Bem-vindo ao BI Assistant AI'
-    }
+app.include_router(health_router)
