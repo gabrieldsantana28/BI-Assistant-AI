@@ -1,4 +1,6 @@
 from fastapi import APIRouter
+
+from backend.app.schemas.chat import ChatRequest
 from backend.app.services.ai_service import ask_ai
 
 router = APIRouter(
@@ -6,11 +8,9 @@ router = APIRouter(
     tags=['Chat']
 )
 
-@router.get('/test')
-def chat_test():
-    resposta = ask_ai(
-        'Responda apenas: Olá Gabriel! Sua API está funcionando.'
-    )
+@router.post('/')
+def chat(request: ChatRequest):
+    resposta = ask_ai(request.message)
 
     return {
         'response': resposta
