@@ -1,15 +1,17 @@
 from fastapi import APIRouter
-from backend.app.services.openai_services import client
+from backend.app.services.ai_service import ask_ai
 
-router = APIRouter()
+router = APIRouter(
+    prefix='/chat',
+    tags=['Chat']
+)
 
-@router.get('/chat/test')
+@router.get('/test')
 def chat_test():
-    response = client.responses.create(
-        model='gpt-5',
-        input='Responda apenas: Olá Gabriel! Sua API está funcionando.'
+    resposta = ask_ai(
+        'Responda apenas: Olá Gabriel! Sua API está funcionando.'
     )
 
     return {
-        'response': response.output_rext
+        'response': resposta
     }
