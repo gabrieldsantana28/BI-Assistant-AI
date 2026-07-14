@@ -1,16 +1,34 @@
 from openai import OpenAI
+from pathlib import Path
 from dotenv import load_dotenv
 import os
 
 load_dotenv()
 
-client = OpenAI(api_key=os.getenv('OPEN_APY_KEY'))
+client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
 
-def ask_ai(prompt: str) -> str:
-    response = client.responses.create(
-        model='gpt-5',
-        input=prompt
-    )
+BASE_DIR = Path(__file__).resolve().parents[3]
 
-    return response.output_text
+PROMPT_PATH = BASE_DIR / 'prompts' / 'system_prompt.txt'
+
+def load_system_prompt() -> str:
+    return PROMPT_PATH.read_text(encoding="utf-8")
+
+SYSTEM_PROMPT = load_system_prompt()
+
+def ask_ai(
+        prompt: str,
+        model: str = 'gpt-5'
+) -> str:
+    try:
+        response = client.responses.create(
+            model=model,
+            instructions=SYSTEM_PROMPT,
+            input=prompt
+        )
+
+        return response.output_text
+    
+    except Exception as e:
+        return f'Erro ao consultar a IA: {e}'
 
